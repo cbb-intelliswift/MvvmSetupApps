@@ -21,7 +21,6 @@ The ViewModel acts as an intermediary between the View and the Model. It exposes
 References
 - https://medium.com/@jecky999/mvvm-architecture-in-android-using-kotlin-a-practical-guide-73f8de1d9c58
 
-
 ### HILT
 Hilt is a dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project
 
@@ -34,6 +33,7 @@ For the project-level build.gradle put this inside:
 plugins {
   id 'com.google.dagger.hilt.android' version '2.46.1' apply false
 }
+
 For the app-level build.gradle put this inside respectively to sections:
 
 plugins {
@@ -75,7 +75,6 @@ For more details of implementation refer below link
 A coroutine is a concurrency design pattern that you can use on Android to simplify code that executes asynchronously.
 
 ###### Setup
-
 
 dependencies {
 def coroutines_version = "1.6.0"
