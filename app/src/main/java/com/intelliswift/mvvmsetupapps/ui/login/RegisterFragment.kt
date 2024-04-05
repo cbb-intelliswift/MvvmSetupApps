@@ -1,10 +1,12 @@
 package com.intelliswift.mvvmsetupapps.ui.login
 
 import android.os.Bundle
+import android.os.Message
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.intelliswift.mvvmsetupapps.R
 import com.intelliswift.mvvmsetupapps.databinding.FragmentRegisterBinding
 import com.intelliswift.mvvmsetupapps.models.UserRequest
+import com.intelliswift.mvvmsetupapps.utils.Helper
 import com.intelliswift.mvvmsetupapps.utils.Helper.Companion.hideKeyboard
 import com.intelliswift.mvvmsetupapps.utils.NetworkResult
 import com.intelliswift.mvvmsetupapps.utils.TokenManager
@@ -70,16 +73,19 @@ class RegisterFragment : Fragment() {
     }
 
     private fun showValidationErrors(error: String) {
-        binding.txtError.text = String.format(resources.getString(R.string.txt_error_message, error))
+        binding.txtError.text =
+            String.format(resources.getString(R.string.txt_error_message, error))
     }
-
 
     private fun getUserRequest(): UserRequest {
         return binding.run {
             UserRequest(
+                txtUsername.text.toString(),
+                false,
+                "d9335e897c1999d9",
+                "Android",
                 txtEmail.text.toString(),
                 txtPassword.text.toString(),
-                txtUsername.text.toString()
             )
         }
     }
@@ -89,19 +95,22 @@ class RegisterFragment : Fragment() {
             binding.progressBar.isVisible = false
             when (it) {
                 is NetworkResult.Success -> {
-                    tokenManager.saveToken(it.data!!.token)
-                    findNavController().navigate(R.id.action_registerFragment_to_mainFragment)
+                    if (it.data?.result.toString() == "failed")
+                        Helper.showToast(activity!!,it.data?.message.toString())
+                    else
+                        Helper.showToast(activity!!,"Signup Successful!")
                 }
+
                 is NetworkResult.Error -> {
                     showValidationErrors(it.message.toString())
                 }
-                is NetworkResult.Loading ->{
+
+                is NetworkResult.Loading -> {
                     binding.progressBar.isVisible = true
                 }
             }
         })
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
